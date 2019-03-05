@@ -68,6 +68,8 @@ def parse_args():
                             help='Activates pc quiz search, default is off.')
     arg_parser.add_argument('--email', action='store_true', dest='email_mode', default=False,
                             help='Activates quiz mode, default is off.')
+    arg_parser.add_argument('--region', dest="region_setting", default='NA',
+                            help='Sets region. Defaults to NA.')
     return arg_parser.parse_args()
 
 
@@ -669,8 +671,9 @@ def get_point_total(pc=False, mobile=False, log=False):
         current_mobile_points, max_mobile_points = map(
             int, browser.find_element_by_class_name('mobilesearch').text.split('/'))
         # get edge points
-        current_edge_points, max_edge_points = map(
-            int, browser.find_element_by_class_name('edgesearch').text.split('/'))
+        if (parser.region_setting == 'NA'):
+            current_edge_points, max_edge_points = map(
+                int, browser.find_element_by_class_name('edgesearch').text.split('/'))
     except ValueError:
         return False
 
@@ -678,14 +681,20 @@ def get_point_total(pc=False, mobile=False, log=False):
     if log:
         logging.info(msg=f'Total points = {current_point_total}')
         logging.info(msg=f'PC points = {current_pc_points}/{max_pc_points}')
-        logging.info(msg=f'Edge points = {current_edge_points}/{max_edge_points}')
+        if (parser.region_setting == 'NA'):
+            logging.info(msg=f'Edge points = {current_edge_points}/{max_edge_points}')
         logging.info(msg=f'Mobile points = {current_mobile_points}/{max_mobile_points}')
 
     # if pc flag, check if pc and edge points met
     if pc:
-        if current_pc_points < max_pc_points or current_edge_points < max_edge_points:
-            return False
-        return True
+        if (parser.region_setting == 'NA'):
+            if current_pc_points < max_pc_points or current_edge_points < max_edge_points:
+                return False
+            return True
+        else:
+            if current_pc_points < max_pc_points:
+                return False
+            return True
     # if mobile flag, check if mobile points met
     if mobile:
         if current_mobile_points < max_mobile_points:

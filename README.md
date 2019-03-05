@@ -39,6 +39,8 @@ This program will automatically complete search requests and quizzes on Microsof
 		- `--mobile` is for mobile search
 		- `--pc` is for pc search
 		- `--quiz` is for quiz search  
+		- `--region` is to set your region
+			- Defaults to `NA` (North America) where points logging works slightly differently to the rest of the world. Set to anything else e.g. `--region="EU"` if you have a `get_point_total` error outside of North America.
 	- Script by will execute mobile, pc, edge, searches, and complete quizzes for all accounts (can change this setting in the .py file)
 	- Script by default will run headlessly (can change this setting in the .py file)  
 	- Run time for one account is under 5 minutes, for 100% daily completion 
